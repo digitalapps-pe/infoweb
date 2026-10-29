@@ -1,0 +1,1439 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Virus Informáticos — Manual de Laboratorio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+/* ─── TOKENS ─── */
+:root {
+  --bg: #0d0f14;
+  --bg2: #13161e;
+  --bg3: #1a1e2a;
+  --surface: #1e2330;
+  --border: #2a2f42;
+  --fg: #e2e4ed;
+  --fg2: #9aa0b8;
+  --fg3: #636880;
+  --red: #ff4d6d;
+  --red2: #ff8096;
+  --amber: #f59e0b;
+  --green: #22d3a4;
+  --blue: #4da6ff;
+  --purple: #a78bfa;
+  --cyan: #06b6d4;
+  --accent: #ff4d6d;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f8f9fc;
+    --bg2: #eef0f6;
+    --bg3: #e4e7f0;
+    --surface: #ffffff;
+    --border: #d1d5e8;
+    --fg: #0d0f1a;
+    --fg2: #3d4260;
+    --fg3: #7c82a0;
+    --red: #e02050;
+    --red2: #b01a40;
+    --amber: #d97706;
+    --green: #0d9975;
+    --blue: #1a6fe0;
+    --purple: #7c3aed;
+    --cyan: #0891b2;
+    --accent: #e02050;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f8f9fc; --bg2: #eef0f6; --bg3: #e4e7f0;
+  --surface: #ffffff; --border: #d1d5e8;
+  --fg: #0d0f1a; --fg2: #3d4260; --fg3: #7c82a0;
+  --red: #e02050; --red2: #b01a40;
+  --amber: #d97706; --green: #0d9975;
+  --blue: #1a6fe0; --purple: #7c3aed; --cyan: #0891b2;
+  --accent: #e02050; color-scheme: light;
+}
+
+/* ─── RESET & BASE ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+
+/* ─── HEADER HERO ─── */
+.hero {
+  position: relative;
+  background: var(--bg);
+  padding: 80px max(24px, env(safe-area-inset-left,0px)) 60px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.3;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+.hero-glow {
+  position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(255,77,109,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner { position: relative; max-width: 880px; margin: 0 auto; }
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,77,109,0.12); border: 1px solid rgba(255,77,109,0.3);
+  color: var(--red); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: pulse 2s infinite }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--red) }
+.hero p {
+  font-size: 1.1rem; color: var(--fg2);
+  max-width: 600px; margin-bottom: 32px;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 20px;
+  font-size: 13px; color: var(--fg3);
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px }
+.hero-meta strong { color: var(--fg2) }
+.theme-btn {
+  position: absolute; top: 24px; right: max(24px, env(safe-area-inset-right,0px));
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--fg2); padding: 8px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s;
+}
+.theme-btn:hover { border-color: var(--accent); color: var(--accent) }
+
+/* ─── NAV TABS ─── */
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,20,0.9);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+@media (prefers-color-scheme: light) {
+  .nav-bar { background: rgba(248,249,252,0.92) }
+}
+:root[data-theme="light"] .nav-bar { background: rgba(248,249,252,0.92) }
+.nav-inner {
+  max-width: 880px; margin: 0 auto;
+  display: flex; gap: 2px;
+  overflow-x: auto; scrollbar-width: none;
+  padding: 8px max(16px, env(safe-area-inset-left,0px));
+}
+.nav-inner::-webkit-scrollbar { display: none }
+.nav-tab {
+  flex-shrink: 0;
+  background: none; border: none;
+  color: var(--fg3); font-size: 13px; font-weight: 500;
+  padding: 6px 14px; border-radius: 6px;
+  cursor: pointer; transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--fg); background: var(--bg3) }
+.nav-tab.active { color: var(--red); background: rgba(255,77,109,0.1) }
+
+/* ─── MAIN LAYOUT ─── */
+.main { max-width: 880px; margin: 0 auto; padding: 0 0 80px }
+
+/* ─── SECTIONS ─── */
+.section {
+  display: none; padding: 48px max(16px, env(safe-area-inset-left,0px));
+}
+.section.visible { display: block }
+
+.section-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.6rem; font-weight: 700;
+  letter-spacing: -0.02em; margin-bottom: 8px;
+}
+.section-sub { color: var(--fg2); margin-bottom: 32px; font-size: 0.95rem }
+
+/* ─── CARDS ─── */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px; margin-bottom: 16px;
+}
+.card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem; font-weight: 600;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+}
+.tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+}
+.tag-red { background: rgba(255,77,109,0.15); color: var(--red) }
+.tag-amber { background: rgba(245,158,11,0.15); color: var(--amber) }
+.tag-green { background: rgba(34,211,164,0.15); color: var(--green) }
+.tag-blue { background: rgba(77,166,255,0.15); color: var(--blue) }
+.tag-purple { background: rgba(167,139,250,0.15); color: var(--purple) }
+.tag-cyan { background: rgba(6,182,212,0.15); color: var(--cyan) }
+
+/* ─── VIRUS TYPE GRID ─── */
+.virus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px; margin-bottom: 32px;
+}
+.virus-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; cursor: pointer;
+  transition: all 0.2s; position: relative; overflow: hidden;
+}
+.virus-card::before {
+  content: ''; position: absolute; inset: 0 auto 0 0;
+  width: 3px; border-radius: 3px 0 0 3px;
+}
+.virus-card.red::before { background: var(--red) }
+.virus-card.amber::before { background: var(--amber) }
+.virus-card.green::before { background: var(--green) }
+.virus-card.blue::before { background: var(--blue) }
+.virus-card.purple::before { background: var(--purple) }
+.virus-card.cyan::before { background: var(--cyan) }
+.virus-card:hover { border-color: var(--accent); transform: translateY(-2px) }
+.virus-card.selected { border-color: var(--accent); background: var(--bg3) }
+.virus-card .vc-icon { font-size: 2rem; margin-bottom: 10px }
+.virus-card .vc-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem; font-weight: 600; margin-bottom: 4px;
+}
+.virus-card .vc-risk { font-size: 11px; display: flex; gap: 6px; align-items: center }
+
+/* ─── DETAIL PANEL ─── */
+.detail-panel {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px;
+  margin-top: 20px; display: none;
+}
+.detail-panel.visible { display: block }
+.detail-panel h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem; font-weight: 700;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+
+/* ─── TIMELINE / STEPS ─── */
+.timeline { position: relative; padding-left: 24px }
+.timeline::before {
+  content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px;
+  width: 2px; background: var(--border);
+}
+.tl-item { position: relative; margin-bottom: 20px }
+.tl-dot {
+  position: absolute; left: -20px; top: 5px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.tl-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px }
+.tl-body { font-size: 0.875rem; color: var(--fg2) }
+
+/* ─── CODE BLOCKS ─── */
+.code-wrap {
+  background: #080a0f; border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; margin: 16px 0;
+}
+:root[data-theme="light"] .code-wrap { background: #1a1e2a }
+.code-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 16px; background: var(--bg3); border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--fg3);
+}
+.code-dots { display: flex; gap: 6px }
+.code-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.d-r { background: #ff5f57 }
+.d-y { background: #febc2e }
+.d-g { background: #28c840 }
+.copy-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--fg3); font-size: 11px; padding: 3px 10px;
+  border-radius: 4px; cursor: pointer; transition: all 0.15s;
+}
+.copy-btn:hover { color: var(--green); border-color: var(--green) }
+pre {
+  padding: 18px 16px; overflow-x: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 13px; line-height: 1.65;
+  color: #c9d1d9;
+}
+/* minimal syntax colors */
+.kw { color: #ff7b72 }
+.st { color: #a5d6ff }
+.cm { color: #636880; font-style: italic }
+.fn { color: #d2a8ff }
+.nb { color: #ffa657 }
+.cp { color: #22d3a4 }
+
+/* ─── COMPARISON TABLE ─── */
+table { width: 100%; border-collapse: collapse; font-size: 13px }
+th {
+  background: var(--bg3); color: var(--fg2);
+  font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.06em; padding: 10px 14px; text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  color: var(--fg2); vertical-align: top;
+}
+tr:last-child td { border-bottom: none }
+tr:hover td { background: var(--bg3) }
+
+/* ─── INFO BOXES ─── */
+.info-box {
+  border-radius: 8px; padding: 14px 16px;
+  margin: 16px 0; font-size: 0.875rem;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.info-box.warn { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--amber) }
+.info-box.danger { background: rgba(255,77,109,0.08); border: 1px solid rgba(255,77,109,0.25); color: var(--red) }
+.info-box.tip { background: rgba(34,211,164,0.08); border: 1px solid rgba(34,211,164,0.25); color: var(--green) }
+.info-box .ib-icon { flex-shrink: 0; font-size: 1.1rem; margin-top: 1px }
+.info-box .ib-body { color: var(--fg2) }
+.info-box .ib-body strong { color: inherit }
+
+/* ─── LAB STEPS ─── */
+.lab-step {
+  counter-increment: step;
+  display: grid; grid-template-columns: 36px 1fr;
+  gap: 16px; margin-bottom: 20px; align-items: flex-start;
+}
+.lab-steps { counter-reset: step }
+.step-num {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,77,109,0.15); border: 1px solid rgba(255,77,109,0.3);
+  color: var(--red); font-weight: 700; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-family: 'JetBrains Mono', monospace;
+}
+.step-body h4 { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px }
+.step-body p { font-size: 0.875rem; color: var(--fg2) }
+
+/* ─── ANATOMY DIAGRAM ─── */
+.anatomy {
+  background: #080a0f; border: 1px solid var(--border);
+  border-radius: 10px; padding: 24px; font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; color: #8b9ab3; overflow-x: auto;
+  white-space: pre; line-height: 1.8;
+}
+:root[data-theme="light"] .anatomy { background: #1a1e2a; color: #8b9ab3 }
+.anatomy .hl-r { color: #ff7b72 }
+.anatomy .hl-g { color: #22d3a4 }
+.anatomy .hl-b { color: #4da6ff }
+.anatomy .hl-y { color: #ffa657 }
+
+/* ─── PROGRESS BAR ─── */
+.risk-bar { display: flex; align-items: center; gap: 10px; margin: 8px 0 }
+.risk-bar-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden }
+.risk-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease }
+.risk-label { font-size: 11px; color: var(--fg3); min-width: 28px; text-align: right }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .virus-grid { grid-template-columns: 1fr }
+  .hero { padding: 60px 16px 40px }
+}
+
+/* ─── HISTORY TIMELINE ─── */
+.hist-item {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 16px; margin-bottom: 24px; align-items: flex-start;
+}
+.hist-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem; font-weight: 600; color: var(--red);
+  padding-top: 2px;
+}
+.hist-content h4 { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px }
+.hist-content p { font-size: 0.875rem; color: var(--fg2) }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <button class="theme-btn" onclick="toggleTheme()">◐ Tema</button>
+  <div class="hero-inner">
+    <div class="badge"><span class="badge-dot"></span>Laboratorio ESAN · Ethical Hacking</div>
+    <h1>Virus Informáticos<br><span>Manual de Laboratorio</span></h1>
+    <p>Anatomía, clasificación y simulación controlada de las principales familias de malware. Material de uso exclusivo en entorno de VMs aisladas.</p>
+    <div class="hero-meta">
+      <span>📚 <strong>8 tipos</strong> de virus cubiertos</span>
+      <span>🔬 <strong>Laboratorio</strong> Python + VMs</span>
+      <span>🛡️ <strong>Detección</strong> por familia</span>
+      <span>⚠️ <strong>Entorno aislado</strong> requerido</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-tab active" onclick="showSection('fundamentos')">Fundamentos</button>
+    <button class="nav-tab" onclick="showSection('historia')">Historia</button>
+    <button class="nav-tab" onclick="showSection('tipos')">Tipos</button>
+    <button class="nav-tab" onclick="showSection('anatomia')">Anatomía</button>
+    <button class="nav-tab" onclick="showSection('lab')">Laboratorio</button>
+    <button class="nav-tab" onclick="showSection('deteccion')">Detección</button>
+    <button class="nav-tab" onclick="showSection('tabla')">Referencia</button>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: FUNDAMENTOS
+══════════════════════════════════════════ -->
+<section id="fundamentos" class="section visible">
+  <h2 class="section-title">¿Qué es un virus informático?</h2>
+  <p class="section-sub">Definición formal, ciclo de vida y diferencias con otros tipos de malware.</p>
+
+  <div class="card">
+    <div class="card-title">Definición formal <span class="tag tag-blue">IEEE/NIST</span></div>
+    <p style="color:var(--fg2);font-size:.9rem;line-height:1.7">Un <strong style="color:var(--fg)">virus informático</strong> es un programa que se <strong style="color:var(--red)">auto-replica</strong> adjuntando copias de sí mismo a otros archivos o programas ejecutables, requiriendo la <strong style="color:var(--fg)">ejecución del huésped</strong> para propagarse. A diferencia de los gusanos (worms), no se propaga sin intervención del usuario o del sistema.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ciclo de vida universal — 4 fases</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--blue)"></div>
+        <div class="tl-title">① Infección (Insertion)</div>
+        <div class="tl-body">El virus copia su código en el huésped (archivo ejecutable, sector de boot, macro, script). Puede ser directo o indirecto (RAM residente).</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--amber)"></div>
+        <div class="tl-title">② Latencia (Incubation)</div>
+        <div class="tl-body">El virus espera una condición de activación: fecha específica, número de ejecuciones, presencia de archivo, acción del usuario.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--red)"></div>
+        <div class="tl-title">③ Propagación (Replication)</div>
+        <div class="tl-body">Busca y contamina nuevos huéspedes. Puede usar sistema de archivos, red, dispositivos removibles, email, etc.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--red)" style="background:#ff0000"></div>
+        <div class="tl-title">④ Ejecución del Payload</div>
+        <div class="tl-body">Acción maliciosa: corrupción de datos, exfiltración, cifrado (ransomware), pantalla de muerte, backdoor, DDoS, espionaje.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Virus vs. Malware — Diferencias clave</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Auto-replica</th>
+          <th>Necesita huésped</th>
+          <th>Red autónoma</th>
+          <th>Ejemplo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Virus</strong></td><td>✅ Sí</td><td>✅ Sí</td><td>❌ No</td><td>CIH, Melissa</td></tr>
+        <tr><td>Gusano (Worm)</td><td>✅ Sí</td><td>❌ No</td><td>✅ Sí</td><td>WannaCry, Conficker</td></tr>
+        <tr><td>Troyano (RAT)</td><td>❌ No</td><td>❌ No</td><td>❌ No</td><td>AsyncRAT, Quasar</td></tr>
+        <tr><td>Ransomware</td><td>Varía</td><td>Varía</td><td>Varía</td><td>LockBit, REvil</td></tr>
+        <tr><td>Rootkit</td><td>❌ No</td><td>Varía</td><td>❌ No</td><td>ZeroAccess, Necurs</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="info-box warn">
+    <span class="ib-icon">⚠️</span>
+    <div class="ib-body"><strong>Uso exclusivo en laboratorio:</strong> Todo el código de simulación de este manual está diseñado para ejecutarse en máquinas virtuales aisladas con red host-only o NAT sin acceso a internet. Nunca ejecutar en sistemas de producción.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: HISTORIA
+══════════════════════════════════════════ -->
+<section id="historia" class="section">
+  <h2 class="section-title">Historia de los Virus</h2>
+  <p class="section-sub">De la teoría de von Neumann a los ataques modernos a infraestructura crítica.</p>
+
+  <div class="card">
+    <div class="hist-item">
+      <div class="hist-year">1949</div>
+      <div class="hist-content"><h4>Teoría de Autómatas Auto-replicantes</h4><p>John von Neumann publica "Theory of Self-Reproducing Automata". Primer modelo matemático de un programa capaz de copiarse a sí mismo.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1971</div>
+      <div class="hist-content"><h4>Creeper — El primer "virus" experimental</h4><p>Bob Thomas crea Creeper en ARPANET: mostraba "I'm the creeper, catch me if you can!" y se movía entre sistemas. Reaper fue creado para eliminarlo.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1982</div>
+      <div class="hist-content"><h4>Elk Cloner — Primer virus masivo</h4><p>Rich Skrenta (15 años) crea Elk Cloner para Apple II en disquetes. Se propagó fuera del control de su autor — primer virus "in the wild".</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1986</div>
+      <div class="hist-content"><h4>Brain — Primer virus para PC/DOS</h4><p>Hermanos Alvi (Pakistán) crean Brain como "protección de copyright". Infectó el sector de boot de disquetes 360KB. Primer virus de boot sector documentado.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1988</div>
+      <div class="hist-content"><h4>Morris Worm — Primera epidemia de red</h4><p>Robert Morris lanza el primer gusano de internet. Afectó ~6,000 máquinas (10% de ARPANET). Primera condena bajo la Computer Fraud and Abuse Act.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1998</div>
+      <div class="hist-content"><h4>CIH (Chernobyl) — Nivel destructivo nuevo</h4><p>Chen Ing-hau crea CIH. Sobrescribía los primeros 1MB del disco duro Y flasheaba la BIOS el 26 de abril. Dejó millones de PCs inoperables.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">1999</div>
+      <div class="hist-content"><h4>Melissa — Macro virus + email</h4><p>Primera gran epidemia de macro virus. Se propagó por Outlook enviando el documento infectado a los primeros 50 contactos. Colapsó servidores de email.</p></div>
+    </div>
+    <div class="hist-item">
+      <div class="hist-year">2010</div>
+      <div class="hist-content"><h4>Stuxnet — Cyberweapon de estado</h4><p>Primer virus/gusano diseñado como arma: destruyó físicamente centrifugadoras iraníes modificando PLCs Siemens. Atribuido a EEUU e Israel. Hito en cyberwarfare.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: TIPOS
+══════════════════════════════════════════ -->
+<section id="tipos" class="section">
+  <h2 class="section-title">Clasificación de Virus</h2>
+  <p class="section-sub">Haz clic en cada tipo para ver su mecanismo detallado, vector de infección y señales de detección.</p>
+
+  <div class="virus-grid">
+    <div class="virus-card red" onclick="showVirus('file')" id="card-file">
+      <div class="vc-icon">📎</div>
+      <div class="vc-name">Infector de Archivos</div>
+      <div class="vc-risk"><span class="tag tag-red">ALTO</span> PE32/ELF/COM</div>
+    </div>
+    <div class="virus-card amber" onclick="showVirus('boot')" id="card-boot">
+      <div class="vc-icon">💾</div>
+      <div class="vc-name">Sector de Boot (MBR)</div>
+      <div class="vc-risk"><span class="tag tag-red">MUY ALTO</span> BIOS/UEFI</div>
+    </div>
+    <div class="virus-card green" onclick="showVirus('macro')" id="card-macro">
+      <div class="vc-icon">📝</div>
+      <div class="vc-name">Macro Virus</div>
+      <div class="vc-risk"><span class="tag tag-amber">MEDIO</span> Office/VBA</div>
+    </div>
+    <div class="virus-card blue" onclick="showVirus('poly')" id="card-poly">
+      <div class="vc-icon">🔄</div>
+      <div class="vc-name">Polimórfico</div>
+      <div class="vc-risk"><span class="tag tag-red">ALTO</span> Mutación/XOR</div>
+    </div>
+    <div class="virus-card purple" onclick="showVirus('meta')" id="card-meta">
+      <div class="vc-icon">🧬</div>
+      <div class="vc-name">Metamórfico</div>
+      <div class="vc-risk"><span class="tag tag-red">MUY ALTO</span> Recompilación</div>
+    </div>
+    <div class="virus-card cyan" onclick="showVirus('resident')" id="card-resident">
+      <div class="vc-icon">🧲</div>
+      <div class="vc-name">Residente en Memoria</div>
+      <div class="vc-risk"><span class="tag tag-amber">ALTO</span> Hooking kernel</div>
+    </div>
+    <div class="virus-card red" onclick="showVirus('worm')" id="card-worm">
+      <div class="vc-icon">🌐</div>
+      <div class="vc-name">Gusano de Red</div>
+      <div class="vc-risk"><span class="tag tag-red">CRÍTICO</span> Auto-propagación</div>
+    </div>
+    <div class="virus-card amber" onclick="showVirus('script')" id="card-script">
+      <div class="vc-icon">📜</div>
+      <div class="vc-name">Script Virus</div>
+      <div class="vc-risk"><span class="tag tag-amber">MEDIO</span> JS/PS1/BAT</div>
+    </div>
+  </div>
+
+  <div id="detail-panel" class="detail-panel"></div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: ANATOMÍA
+══════════════════════════════════════════ -->
+<section id="anatomia" class="section">
+  <h2 class="section-title">Anatomía de un Virus</h2>
+  <p class="section-sub">Estructura interna de un infector de archivos PE32 (Windows). Componentes universales y opcionales.</p>
+
+  <div class="code-wrap">
+    <div class="code-header">
+      <div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+      <span>estructura_virus_pe32.py — simulación educativa</span>
+    </div>
+    <pre><span class="cm"># ─── ANATOMÍA DE UN INFECTOR DE ARCHIVOS (PE32) ─────────────────────────────
+# COMPONENTES UNIVERSALES (toda muestra de virus los tiene)
+# COMPONENTES OPCIONALES  (varían por familia)</span>
+
+<span class="kw">class</span> <span class="fn">VirusSimulado</span>:
+    <span class="cm">"""
+    Simulación académica — NO ejecutable en producción.
+    Demuestra la estructura conceptual de un infector de archivos.
+    Entorno: VM Windows 10 aislada, red host-only.
+    """</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="cm"># ── 1. VECTOR DE INFECCIÓN ──────────────────────────────────
+        # Cómo el virus llega a un nuevo huésped.
+        # Ejemplos reales: email adjunto, USB, descarga, exploit</span>
+        self.vector = <span class="st">"archivo_PE32_modificado"</span>
+
+        <span class="cm"># ── 2. RUTINA DE BÚSQUEDA (Finder) ──────────────────────────
+        # El virus busca huéspedes candidatos (otros .exe, .dll, etc.)</span>
+        self.extensiones_objetivo = [<span class="st">'.exe'</span>, <span class="st">'.dll'</span>, <span class="st">'.com'</span>]
+
+        <span class="cm"># ── 3. MECANISMO DE REPLICACIÓN (Infector) ──────────────────
+        # Adjunta/inserta el cuerpo viral al huésped</span>
+        self.metodo_infeccion = <span class="st">"append_al_final_de_seccion_code"</span>
+
+        <span class="cm"># ── 4. TRIGGER / BOMBA LÓGICA (opcional) ────────────────────
+        # Condición de activación del payload</span>
+        self.trigger = <span class="st">"fecha == '1999-04-26'"</span>  <span class="cm"># CIH usó esta fecha</span>
+
+        <span class="cm"># ── 5. PAYLOAD ──────────────────────────────────────────────
+        # La acción dañina. Puede ser: borrar, cifrar, espiar, etc.</span>
+        self.payload = <span class="st">"mostrar_mensaje"</span>       <span class="cm"># payload benigno para lab</span>
+
+        <span class="cm"># ── 6. ANTI-DETECCIÓN (opcional) ────────────────────────────
+        # Técnicas: cifrado, polimorfismo, anti-debug, rootkit</span>
+        self.evasion = <span class="st">"xor_simple_key_0x37"</span>
+
+    <span class="kw">def</span> <span class="fn">buscar_huespedes</span>(self, directorio: str) -> list:
+        <span class="cm">"""Fase 1: Scan de archivos ejecutables candidatos."""</span>
+        <span class="kw">import</span> os
+        candidatos = []
+        <span class="kw">for</span> root, dirs, files <span class="kw">in</span> os.walk(directorio):
+            <span class="kw">for</span> f <span class="kw">in</span> files:
+                <span class="kw">if</span> any(f.endswith(ext) <span class="kw">for</span> ext <span class="kw">in</span> self.extensiones_objetivo):
+                    candidatos.append(os.path.join(root, f))
+        <span class="kw">return</span> candidatos
+
+    <span class="kw">def</span> <span class="fn">ya_infectado</span>(self, archivo: str) -> bool:
+        <span class="cm">"""Marcador de infección (evita re-infección).
+        Virus reales usan firmas, checksums, bytes específicos."""</span>
+        <span class="kw">with</span> open(archivo, <span class="st">'rb'</span>) <span class="kw">as</span> f:
+            contenido = f.read()
+        FIRMA = <span class="nb">b</span><span class="st">'\xDE\xAD\xBE\xEF'</span>   <span class="cm"># firma del virus en el huésped</span>
+        <span class="kw">return</span> FIRMA <span class="kw">in</span> contenido
+
+    <span class="kw">def</span> <span class="fn">infectar_archivo</span>(self, archivo: str) -> bool:
+        <span class="cm">"""Fase 2: Adjunta cuerpo viral al huésped (simulado).
+        REAL: modifica entry point PE, redirige ejecución al virus."""</span>
+        <span class="kw">if</span> self.ya_infectado(archivo):
+            <span class="kw">return</span> <span class="nb">False</span>  <span class="cm"># no re-infectar</span>
+        <span class="cm"># En simulación solo añadimos la firma — no código ejecutable</span>
+        <span class="kw">with</span> open(archivo, <span class="st">'ab'</span>) <span class="kw">as</span> f:
+            f.write(<span class="nb">b</span><span class="st">'\xDE\xAD\xBE\xEF'</span> + <span class="nb">b</span><span class="st">'[VIRUS_SIM]'</span>)
+        <span class="kw">return</span> <span class="nb">True</span>
+
+    <span class="kw">def</span> <span class="fn">verificar_trigger</span>(self) -> bool:
+        <span class="cm">"""Fase 3: Comprueba condición de disparo."""</span>
+        <span class="kw">from</span> datetime <span class="kw">import</span> date
+        <span class="kw">return</span> date.today().strftime(<span class="st">'%m-%d'</span>) == <span class="st">'04-26'</span>
+
+    <span class="kw">def</span> <span class="fn">ejecutar_payload</span>(self):
+        <span class="cm">"""Fase 4: Acción del payload (benigna en lab)."""</span>
+        print(<span class="st">f"[LAB] Payload activado el {__import__('datetime').date.today()}"</span>)
+        print(<span class="st">"[LAB] En virus real: borrado, cifrado, exfiltración, etc."</span>)</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Diagrama — Infección de PE32</div>
+    <div class="anatomy">
+<span class="hl-b">ARCHIVO LEGÍTIMO (antes de infección):</span>
+┌────────────────────────────────────────┐
+│  PE Header  │  .text  │  .data  │ EOF  │
+│  (MZ magic) │ (código)│ (datos) │      │
+└────────────────────────────────────────┘
+
+<span class="hl-r">ARCHIVO INFECTADO (infector append):</span>
+┌──────────────────────────────────────────────────────┐
+│  PE Header  │  .text  │  .data  │  VIRUS CODE  │ EOF │
+│  Entry Pt ──────────────────────────────┐            │
+│  (redirigido al virus)                  ▼            │
+│                               ┌─────────────────┐   │
+│                               │ 1. Rutina búsq. │   │
+│                               │ 2. Infector      │   │
+│                               │ 3. Trigger check │   │
+│                               │ 4. Payload       │   │
+│                               │ 5. JMP orig EP   │   │
+│                               └─────────────────┘   │
+└──────────────────────────────────────────────────────┘
+
+<span class="hl-g">EJECUCIÓN DESDE PERSPECTIVA DEL USUARIO:</span>
+  Usuario doble-clic → OS carga PE → Entry Point → VIRUS corre primero
+  → busca/infecta vecinos → verifica trigger → ejecuta payload
+  → salta al Entry Point ORIGINAL → app corre "normal"
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: LABORATORIO
+══════════════════════════════════════════ -->
+<section id="lab" class="section">
+  <h2 class="section-title">Laboratorio Controlado</h2>
+  <p class="section-sub">Ejercicios de simulación en VMs aisladas. Objetivo: observar comportamiento sin riesgo real.</p>
+
+  <div class="info-box danger">
+    <span class="ib-icon">🔴</span>
+    <div class="ib-body"><strong>REQUISITOS DE ENTORNO:</strong> Todas las prácticas requieren VMs con red configurada como <strong>Host-Only o NAT sin reenvío de puertos</strong>. Nunca ejecutar en equipos con acceso a redes de producción. Snapshot antes de cada ejercicio.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Topología de laboratorio recomendada</div>
+    <div class="anatomy">
+┌─────────────────────────────────────────────────────┐
+│                  HOST FÍSICO                        │
+│                                                     │
+│  ┌──────────────────┐    ┌──────────────────────┐   │
+│  │   VM-ATTACKER    │    │    VM-VICTIM         │   │
+│  │   Kali 2024      │    │    Windows 10 (sin   │   │
+│  │   192.168.56.10  │◄──►│    AV activo)        │   │
+│  │   Python 3.12    │    │    192.168.56.20      │   │
+│  └──────────────────┘    │    Python 3.12        │   │
+│                          └──────────────────────┘   │
+│                                                     │
+│  Red: VirtualBox Host-Only Adapter (vboxnet0)       │
+│  Sin gateway — Sin salida a internet                │
+└─────────────────────────────────────────────────────┘
+    </div>
+  </div>
+
+  <div class="card" id="lab-selector">
+    <div class="card-title">Seleccionar ejercicio:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+      <button class="nav-tab active" style="border:1px solid var(--border)" onclick="showLab('lab1')">Lab 1: Infector de archivos</button>
+      <button class="nav-tab" style="border:1px solid var(--border)" onclick="showLab('lab2')">Lab 2: Macro virus VBA</button>
+      <button class="nav-tab" style="border:1px solid var(--border)" onclick="showLab('lab3')">Lab 3: Polimorfismo XOR</button>
+      <button class="nav-tab" style="border:1px solid var(--border)" onclick="showLab('lab4')">Lab 4: Gusano de red</button>
+    </div>
+  </div>
+
+  <div id="lab-content"></div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: DETECCIÓN
+══════════════════════════════════════════ -->
+<section id="deteccion" class="section">
+  <h2 class="section-title">Detección y Análisis</h2>
+  <p class="section-sub">Técnicas de detección por familia de virus y herramientas de análisis estático/dinámico.</p>
+
+  <div class="card">
+    <div class="card-title">Métodos de detección antivirus</div>
+    <table>
+      <thead><tr><th>Método</th><th>Cómo funciona</th><th>Eficaz contra</th><th>Limitación</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Firmas (Signature)</strong></td><td>Compara bytes/hash con BD de firmas conocidas</td><td>Virus conocidos</td><td>0-day, polimórficos</td></tr>
+        <tr><td><strong>Heurística</strong></td><td>Detecta patrones sospechosos (auto-modificación, API calls)</td><td>Variantes nuevas</td><td>Falsos positivos</td></tr>
+        <tr><td><strong>Comportamental</strong></td><td>Sandbox dinámico: ejecuta y observa acciones</td><td>Polimórficos, 0-day</td><td>Anti-sandbox evasion</td></tr>
+        <tr><td><strong>Machine Learning</strong></td><td>Modelo entrenado con features PE, n-gramas, imports</td><td>Familias desconocidas</td><td>Adversarial ML</td></tr>
+        <tr><td><strong>Integridad (AIDE/Tripwire)</strong></td><td>Detecta cambios en archivos monitoreados</td><td>Infecciones en disco</td><td>No detecta in-memory</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Script de análisis estático básico <span class="tag tag-green">Python</span></div>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+        <span>analisis_estatico.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><span class="kw">import</span> hashlib, os, sys, struct
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="kw">def</span> <span class="fn">analizar_archivo</span>(ruta: str):
+    <span class="cm">"""Análisis estático básico de un ejecutable sospechoso."""</span>
+    p = Path(ruta)
+    data = p.read_bytes()
+
+    print(<span class="st">f"\n{'='*55}"</span>)
+    print(<span class="st">f"  ANÁLISIS ESTÁTICO: {p.name}"</span>)
+    print(<span class="st">f"{'='*55}"</span>)
+
+    <span class="cm"># ── Hashes ──────────────────────────────────────────────</span>
+    md5  = hashlib.md5(data).hexdigest()
+    sha1 = hashlib.sha1(data).hexdigest()
+    sha256 = hashlib.sha256(data).hexdigest()
+    print(<span class="st">f"\n[HASH]"</span>)
+    print(<span class="st">f"  MD5   : {md5}"</span>)
+    print(<span class="st">f"  SHA1  : {sha1}"</span>)
+    print(<span class="st">f"  SHA256: {sha256}"</span>)
+    <span class="cm"># → Buscar en VirusTotal, MalwareBazaar, Hybrid Analysis</span>
+
+    <span class="cm"># ── Firma PE ─────────────────────────────────────────────</span>
+    es_pe = data[:2] == <span class="nb">b</span><span class="st">'MZ'</span>
+    print(<span class="st">f"\n[FORMATO]"</span>)
+    print(<span class="st">f"  Tipo   : {'PE32 (Windows)' if es_pe else 'No-PE'}"</span>)
+    print(<span class="st">f"  Tamaño : {len(data):,} bytes"</span>)
+
+    <span class="cm"># ── Strings sospechosas ──────────────────────────────────</span>
+    strings = extraer_strings(data, min_len=5)
+    keywords = [<span class="st">'http'</span>, <span class="st">'cmd.exe'</span>, <span class="st">'powershell'</span>, <span class="st">'regedit'</span>,
+                <span class="st">'HKEY_'</span>, <span class="st">'CreateRemoteThread'</span>, <span class="st">'VirtualAlloc'</span>,
+                <span class="st">'WriteProcessMemory'</span>, <span class="st">'WScript'</span>, <span class="st">'AutoOpen'</span>]
+    sospechosas = [s <span class="kw">for</span> s <span class="kw">in</span> strings <span class="kw">if</span> any(k.lower() <span class="kw">in</span> s.lower()
+                                                  <span class="kw">for</span> k <span class="kw">in</span> keywords)]
+    print(<span class="st">f"\n[STRINGS SOSPECHOSAS] ({len(sospechosas)} encontradas)"</span>)
+    <span class="kw">for</span> s <span class="kw">in</span> sospechosas[:15]:
+        print(<span class="st">f"  ⚠  {s}"</span>)
+
+    <span class="cm"># ── Firma de virus conocida en este lab ──────────────────</span>
+    FIRMAS_LAB = {
+        <span class="nb">b</span><span class="st">'\xDE\xAD\xBE\xEF'</span>: <span class="st">'VirusSimulado_Lab (firma DEAD BEEF)'</span>,
+        <span class="nb">b</span><span class="st">'[VIRUS_SIM]'</span>: <span class="st">'Marcador de infección lab'</span>,
+    }
+    print(<span class="st">f"\n[DETECCIÓN DE FIRMAS]"</span>)
+    encontrado = <span class="nb">False</span>
+    <span class="kw">for</span> firma, nombre <span class="kw">in</span> FIRMAS_LAB.items():
+        <span class="kw">if</span> firma <span class="kw">in</span> data:
+            print(<span class="st">f"  🔴 INFECTADO: {nombre}"</span>)
+            encontrado = <span class="nb">True</span>
+    <span class="kw">if not</span> encontrado:
+        print(<span class="st">f"  🟢 Sin firmas conocidas del lab"</span>)
+
+<span class="kw">def</span> <span class="fn">extraer_strings</span>(data: bytes, min_len=4) -> list:
+    <span class="cm">"""Extrae strings ASCII del binario (como 'strings' en Unix)."""</span>
+    result, current = [], []
+    <span class="kw">for</span> b <span class="kw">in</span> data:
+        <span class="kw">if</span> 0x20 <= b <= 0x7e:
+            current.append(chr(b))
+        <span class="kw">elif</span> current:
+            <span class="kw">if</span> len(current) >= min_len:
+                result.append(<span class="st">''</span>.join(current))
+            current = []
+    <span class="kw">return</span> result
+
+<span class="kw">if</span> __name__ == <span class="st">'__main__'</span>:
+    <span class="kw">if</span> len(sys.argv) < 2:
+        print(<span class="st">"Uso: python analisis_estatico.py &lt;archivo&gt;"</span>)
+    <span class="kw">else</span>:
+        analizar_archivo(sys.argv[1])</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Herramientas recomendadas por fase</div>
+    <table>
+      <thead><tr><th>Fase</th><th>Herramienta</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td>Estático</td><td>pestudio, CFF Explorer, Detect-It-Easy</td><td>PE headers, imports, strings, packers</td></tr>
+        <tr><td>Estático</td><td>YARA + yarGen</td><td>Escribir y ejecutar reglas de firma</td></tr>
+        <tr><td>Dinámico</td><td>Process Monitor, Process Hacker</td><td>Syscalls, registry, filesystem, red</td></tr>
+        <tr><td>Dinámico</td><td>Wireshark + NetworkMiner</td><td>Tráfico de red, C2, beaconing</td></tr>
+        <tr><td>Dinámico</td><td>Cuckoo Sandbox (VM)</td><td>Sandbox automatizado con reportes</td></tr>
+        <tr><td>Red</td><td>INetSim, FakeNet-NG</td><td>Simular internet en la VM</td></tr>
+        <tr><td>Memoria</td><td>Volatility 3</td><td>Análisis de dumps de RAM</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECCIÓN: TABLA DE REFERENCIA
+══════════════════════════════════════════ -->
+<section id="tabla" class="section">
+  <h2 class="section-title">Tabla de Referencia Rápida</h2>
+  <p class="section-sub">Comparativa completa de todas las familias de virus cubiertas.</p>
+  <div style="overflow-x:auto">
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Vector</th>
+        <th>Huésped</th>
+        <th>Propagación</th>
+        <th>Detección AV</th>
+        <th>Ejemplo histórico</th>
+        <th>IOC típico</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Infector PE</strong></td>
+        <td>Ejecución de archivo</td>
+        <td>.exe, .dll, .com</td>
+        <td>Manual</td>
+        <td>Firmas (alta)</td>
+        <td>CIH, Virut, Sality</td>
+        <td>Cambio en hash + sección extra</td>
+      </tr>
+      <tr>
+        <td><strong>Boot Sector</strong></td>
+        <td>Arranque desde medio</td>
+        <td>MBR / VBR</td>
+        <td>USB, disquete</td>
+        <td>Baja (pre-OS)</td>
+        <td>Brain, Michelangelo</td>
+        <td>MBR modificado, rootkit</td>
+      </tr>
+      <tr>
+        <td><strong>Macro</strong></td>
+        <td>Apertura de documento</td>
+        <td>.docm, .xlsm</td>
+        <td>Email, OneDrive</td>
+        <td>Media</td>
+        <td>Melissa, Concept</td>
+        <td>AutoOpen/AutoExec macro</td>
+      </tr>
+      <tr>
+        <td><strong>Polimórfico</strong></td>
+        <td>Ejecutable cifrado</td>
+        <td>PE + decryptor</td>
+        <td>Manual</td>
+        <td>Heurística (media)</td>
+        <td>Tequila, SMEG</td>
+        <td>Entropía alta (>7.0), decryptor stub</td>
+      </tr>
+      <tr>
+        <td><strong>Metamórfico</strong></td>
+        <td>Ejecutable reescrito</td>
+        <td>PE autogenerado</td>
+        <td>Manual</td>
+        <td>ML/heurística (baja)</td>
+        <td>Zmist, Simile</td>
+        <td>Graph similarity < 60%</td>
+      </tr>
+      <tr>
+        <td><strong>Residente</strong></td>
+        <td>Carga en RAM</td>
+        <td>Kernel / drivers</td>
+        <td>Hook de I/O</td>
+        <td>Muy baja</td>
+        <td>Frodo, Whale</td>
+        <td>SSDT hooks, procesos ocultos</td>
+      </tr>
+      <tr>
+        <td><strong>Gusano red</strong></td>
+        <td>Exploit de red</td>
+        <td>Sistema operativo</td>
+        <td>Autónoma (red)</td>
+        <td>Firmas + IDS</td>
+        <td>Morris, Conficker, WannaCry</td>
+        <td>Scans masivos puerto 445/80</td>
+      </tr>
+      <tr>
+        <td><strong>Script</strong></td>
+        <td>Ejecución de script</td>
+        <td>.js, .vbs, .ps1, .bat</td>
+        <td>Email, web</td>
+        <td>Media</td>
+        <td>ILOVEYOU, Anna Kournikova</td>
+        <td>WScript.Shell, cmd.exe child</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+</div><!-- .main -->
+
+<script>
+// ─── THEME ───────────────────────────────────────────────────────────
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+  try { localStorage.setItem('theme', root.getAttribute('data-theme')) } catch(e) {}
+}
+try {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+} catch(e) {}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('visible');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── COPY CODE ───────────────────────────────────────────────────────
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Copiado';
+    setTimeout(() => btn.textContent = 'Copiar', 2000);
+  });
+}
+
+// ─── VIRUS TYPE DETAIL ───────────────────────────────────────────────
+const virusData = {
+  file: {
+    name: 'Infector de Archivos (PE32)',
+    color: 'var(--red)',
+    icon: '📎',
+    riesgo: 85,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">El infector de archivos modifica el <strong style="color:var(--fg)">Entry Point</strong> del ejecutable huésped para redirigir la ejecución a su propio código antes que el programa legítimo. Puede adjuntarse al inicio, al final o a las secciones internas del PE.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Modificación del Entry Point</div><div class="tl-body">El virus altera el campo AddressOfEntryPoint en el PE Header para que apunte al inicio del código viral.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Búsqueda de huéspedes</div><div class="tl-body">Escanea directorios del sistema, PATH, archivos abiertos recientemente o usa FindFirstFile/FindNextFile de Win32.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Marca de infección</div><div class="tl-body">Inserta una firma (magic bytes) para no re-infectar el mismo archivo. Evita detección por tamaño inusual.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Restauración y salto</div><div class="tl-body">Tras ejecutar su payload, salta al Entry Point original para que la aplicación funcione normalmente.</div></div>
+      </div>`,
+    iocs: ['Hash de archivo cambia', 'Tamaño de .exe aumenta', 'Nueva sección PE sospechosa', 'Timestamp de modificación reciente'],
+    ejemplos: 'CIH (1998), Virut, Sality, Dvirut'
+  },
+  boot: {
+    name: 'Virus de Sector de Boot (MBR/VBR)',
+    color: 'var(--amber)',
+    icon: '💾',
+    riesgo: 95,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">El virus de boot infecta el <strong style="color:var(--fg)">Master Boot Record</strong> (sector 0 del disco) o el <strong style="color:var(--fg)">Volume Boot Record</strong>. Se carga <em>antes</em> del sistema operativo, siendo prácticamente invisible para el AV.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Infección del MBR</div><div class="tl-body">El virus copia el MBR original a otro sector y escribe su código en el sector 0. Al arrancar, el BIOS carga el virus.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Carga pre-OS</div><div class="tl-body">El virus se ejecuta antes que el bootloader de Windows/Linux. Puede instalar hooks en interrupt 13h (acceso a disco).</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Propagación a otros medios</div><div class="tl-body">Infecta USBs y discos extraíbles cuando se conectan. En la era de disquetes se propagaba masivamente.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Persistencia total</div><div class="tl-body">Reinstalar el OS no elimina el virus en el MBR. Requiere bootrec /fixmbr o escribir un nuevo MBR limpio.</div></div>
+      </div>`,
+    iocs: ['MBR modificado (diff con backup)', 'Falla en arranque', 'MBR size ≠ 446 bytes antes de tabla de particiones', 'Secure Boot deshabilitado'],
+    ejemplos: 'Brain (1986), Michelangelo, Stoned, Petya (MBR wiper)'
+  },
+  macro: {
+    name: 'Macro Virus (VBA)',
+    color: 'var(--green)',
+    icon: '📝',
+    riesgo: 60,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">Los macro virus residen en <strong style="color:var(--fg)">documentos Office</strong> como código VBA. Se activan cuando el usuario abre el documento y ejecuta macros (o si las macros de auto-ejecución están habilitadas).</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-title">AutoOpen / Document_Open</div><div class="tl-body">El macro virus usa eventos VBA que se disparan automáticamente al abrir el documento sin intervención del usuario.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-title">Infección del Normal.dotm</div><div class="tl-body">Se copia a la plantilla global de Word. Todos los documentos nuevos heredan el virus al crearse desde esa plantilla.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--green)"></div><div class="tl-title">Propagación vía email</div><div class="tl-body">Melissa usaba Outlook.Application para enviarse a los primeros 50 contactos con un mensaje trampa.</div></div>
+      </div>`,
+    iocs: ['Macros habilitadas en documentos', 'Normal.dotm modificado', 'WScript.Shell desde winword.exe', 'Proceso powershell hijo de WINWORD.EXE'],
+    ejemplos: 'Melissa (1999), Concept (1995), Laroux (Excel), DMV'
+  },
+  poly: {
+    name: 'Virus Polimórfico',
+    color: 'var(--blue)',
+    icon: '🔄',
+    riesgo: 80,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">El virus polimórfico <strong style="color:var(--fg)">cifra su cuerpo</strong> con una clave diferente en cada infección y solo mantiene constante el pequeño <em>decryptor stub</em>. Cada copia tiene bytes diferentes, evadiendo firmas estáticas.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-title">Motor de mutación (MEC)</div><div class="tl-body">Un Mutation Engine Cipher genera un decryptor diferente por infección: cambia instrucciones, orden de registros, NOP sleds.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-title">Cifrado del cuerpo viral</div><div class="tl-body">El cuerpo del virus (payload + replicador) va cifrado con XOR, ROT, ADD o cifrado más complejo. Solo el stub lo descifra.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--blue)"></div><div class="tl-title">Detección: análisis de entropía</div><div class="tl-body">Archivos cifrados tienen entropía Shannon > 7.0. Herramientas como pestudio muestran la entropía por sección.</div></div>
+      </div>`,
+    iocs: ['Entropía de sección .text > 7.0', 'Stub de decryptor en entry point', 'Misma funcionalidad, diferentes hashes', 'Sección PE sin nombre reconocido'],
+    ejemplos: 'Tequila (1991), SMEG/Pathogen, Whale, V2P1-6'
+  },
+  meta: {
+    name: 'Virus Metamórfico',
+    color: 'var(--purple)',
+    icon: '🧬',
+    riesgo: 95,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">El virus metamórfico va más allá: <strong style="color:var(--fg)">reescribe su propio código</strong> completamente en cada infección. No usa cifrado — usa transformación de código: sustitución de instrucciones equivalentes, reordenamiento de bloques, inserción de código basura.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-title">Desensambla su propio código</div><div class="tl-body">El motor metamórfico tiene un desensamblador interno que convierte su código en representación intermedia (IR).</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-title">Transformación semántica</div><div class="tl-body">MOV EAX,0 → XOR EAX,EAX. ADD EAX,5 → ADD EAX,3 / ADD EAX,2. Mismo resultado, bytecode diferente.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-title">Recompilación y reemplazo</div><div class="tl-body">El código transformado reemplaza al original. Sin cifrado: cada copia es código ejecutable diferente con funcionalidad idéntica.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--purple)"></div><div class="tl-title">Detección: grafos de control de flujo</div><div class="tl-body">CFG similarity analysis: si dos binarios tienen el mismo grafo de flujo aunque el bytecode difiera, son la misma muestra.</div></div>
+      </div>`,
+    iocs: ['CFG similar a familia conocida', 'No hay cifrado pero muchos junk NOPs', 'Control flow graph analysis positivo', 'Similitud funcional > estructural'],
+    ejemplos: 'Zmist (2001), Simile/MetaPHOR, NGVCK-generated'
+  },
+  resident: {
+    name: 'Virus Residente en Memoria',
+    color: 'var(--cyan)',
+    icon: '🧲',
+    riesgo: 85,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">El virus residente se aloja permanentemente en RAM y <strong style="color:var(--fg)">intercepta llamadas al sistema</strong> (interrupts, syscalls) para infectar archivos en tiempo real, cada vez que el OS los accede.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--cyan)"></div><div class="tl-title">Instalación en memoria</div><div class="tl-body">Al primer arranque, se instala como residente en un área de memoria protegida (TSR en DOS, driver en Windows).</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--cyan)"></div><div class="tl-title">Hook de interrupciones</div><div class="tl-body">Intercepta INT 21h (DOS) o SSDT hooks (Windows) para capturar toda operación de apertura/ejecución de archivos.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--cyan)"></div><div class="tl-title">Infección transparente</div><div class="tl-body">Cada archivo que el usuario abre o ejecuta es automáticamente infectado. El proceso parece normal al usuario.</div></div>
+      </div>`,
+    iocs: ['Hooks en SSDT/IDT', 'Driver sin firma en kernel', 'Módulo kernel anónimo', 'Aumento de tiempo en I/O de disco'],
+    ejemplos: 'Frodo (Dark Avenger), Whale, Jerusalem, 1701/1704'
+  },
+  worm: {
+    name: 'Gusano de Red (Network Worm)',
+    color: 'var(--red)',
+    icon: '🌐',
+    riesgo: 100,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">Los gusanos son técnicamente virus que <strong style="color:var(--fg)">no necesitan huésped</strong> y se propagan autónomamente por red explotando vulnerabilidades. Son la categoría más dañina por velocidad de propagación.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Escaneo de red</div><div class="tl-body">Genera IPs aleatorias y escanea puertos vulnerables (445/SMB, 80/HTTP, 22/SSH). WannaCry escaneaba millones de IPs/hora.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Explotación de vulnerabilidad</div><div class="tl-body">Usa un exploit (EternalBlue para WannaCry, MS08-067 para Conficker) para ejecutar código remoto sin intervención del usuario.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Auto-instalación en víctima</div><div class="tl-body">Descarga y ejecuta una copia de sí mismo en el sistema comprometido. Inmediatamente comienza a escanear desde la nueva víctima.</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Payload + propagación simultánea</div><div class="tl-body">WannaCry: cifra archivos (ransomware) Y sigue propagándose. Conficker: botnet + crypto. Propagación exponencial.</div></div>
+      </div>`,
+    iocs: ['Escaneos masivos salientes (netstat)', 'Tráfico SYN a múltiples IPs en puerto 445', 'Proceso sistema con conexiones externas inusuales', 'IDS: Port scan alert'],
+    ejemplos: 'Morris Worm (1988), Conficker (2008), WannaCry (2017), Slammer (2003)'
+  },
+  script: {
+    name: 'Virus de Script',
+    color: 'var(--amber)',
+    icon: '📜',
+    riesgo: 65,
+    mecanismo: `
+      <p style="color:var(--fg2);margin-bottom:16px">Los virus de script se escriben en lenguajes interpretados (VBScript, JavaScript, PowerShell, BAT) y se propagan principalmente via <strong style="color:var(--fg)">email y web</strong>. Son fácilmente modificables por atacantes no expertos.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Vector: adjunto de email</div><div class="tl-body">El clásico: doble clic en "ILOVEYOU.txt.vbs". Windows ocultaba la extensión .vbs — el usuario veía solo .txt.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Uso de WScript / PowerShell</div><div class="tl-body">WScript.Shell para ejecutar comandos. Invoke-Expression para descargar payloads. Todo desde un script de texto plano.</div></div>
+        <div class="tl-item"><div class="tl-dot" style="background:var(--amber)"></div><div class="tl-title">Modificación de scripts del sistema</div><div class="tl-body">Se copia a directorios de inicio, modifica scripts de login, o se adjunta a otros .bat/.ps1 del sistema.</div></div>
+      </div>`,
+    iocs: ['WScript.exe lanzando scripts desde temp', 'PowerShell con -EncodedCommand', 'Proceso padre outlook.exe → cmd.exe', '.vbs/.js en carpetas de inicio'],
+    ejemplos: 'ILOVEYOU (2000), Anna Kournikova, Stages.vbs, LoveLetter'
+  }
+};
+
+function showVirus(type) {
+  // Deselect all cards
+  document.querySelectorAll('.virus-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + type).classList.add('selected');
+
+  const v = virusData[type];
+  const panel = document.getElementById('detail-panel');
+  panel.innerHTML = `
+    <h3><span style="font-size:1.5rem">${v.icon}</span> ${v.name}</h3>
+    <div class="risk-bar" style="margin-bottom:20px">
+      <span style="font-size:12px;color:var(--fg2);min-width:90px">Nivel de riesgo</span>
+      <div class="risk-bar-track"><div class="risk-bar-fill" style="width:${v.riesgo}%;background:${v.color}"></div></div>
+      <span class="risk-label">${v.riesgo}%</span>
+    </div>
+    ${v.mecanismo}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px">
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg3);margin-bottom:8px">IOCs Típicos</div>
+        ${v.iocs.map(i => `<div style="font-size:13px;color:var(--fg2);padding:4px 0;border-bottom:1px solid var(--border)">• ${i}</div>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg3);margin-bottom:8px">Ejemplos Históricos</div>
+        <div style="font-size:13px;color:var(--fg2)">${v.ejemplos}</div>
+      </div>
+    </div>
+  `;
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ─── LAB CONTENT ─────────────────────────────────────────────────────
+const labContent = {
+  lab1: `
+    <div class="card">
+      <div class="card-title">Lab 1: Simulación de Infector de Archivos <span class="tag tag-red">VM Windows</span></div>
+      <div class="info-box tip">
+        <span class="ib-icon">🎯</span>
+        <div class="ib-body"><strong>Objetivo:</strong> Observar cómo un virus infector modifica archivos PE y detectar el cambio con análisis estático.</div>
+      </div>
+      <div class="lab-steps">
+        <div class="lab-step"><div class="step-num">01</div><div class="step-body"><h4>Preparar directorio de targets</h4><p>En la VM víctima, crea C:\\lab\\targets\\ y copia ahí 3-4 ejecutables legítimos pequeños (calc.exe, notepad.exe desde System32).</p></div></div>
+        <div class="lab-step"><div class="step-num">02</div><div class="step-body"><h4>Registrar hashes iniciales</h4><p>Ejecuta: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">Get-FileHash C:\\lab\\targets\\* | Export-Csv hashes_pre.csv</code></p></div></div>
+        <div class="lab-step"><div class="step-num">03</div><div class="step-body"><h4>Ejecutar simulación de infección</h4><p>Copia el script virus_simulado.py a C:\\lab\\ y ejecuta: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px">python virus_simulado.py C:\\lab\\targets</code></p></div></div>
+        <div class="lab-step"><div class="step-num">04</div><div class="step-body"><h4>Comparar hashes post-infección</h4><p>Ejecuta nuevamente Get-FileHash y compara con hashes_pre.csv. Todos los archivos deben tener hash diferente.</p></div></div>
+        <div class="lab-step"><div class="step-num">05</div><div class="step-body"><h4>Detección con analisis_estatico.py</h4><p>Ejecuta el script de análisis contra cada archivo infectado. Debe detectar la firma DEAD BEEF y reportar strings sospechosas.</p></div></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div>
+          <span>virus_simulado.py — infector educativo (sin payload dañino)</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+        </div>
+        <pre><span class="cm">#!/usr/bin/env python3
+# VirusSimulado — Infector de archivos educativo
+# USO EXCLUSIVO EN VM AISLADA — Lab ESAN Ethical Hacking
+# No modifica Entry Point real — solo añade marcador al final del archivo</span>
+
+<span class="kw">import</span> os, sys, struct
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+FIRMA_VIRUS   = <span class="nb">b</span><span class="st">'\xDE\xAD\xBE\xEF'</span>    <span class="cm"># 4 bytes — marcador de infección</span>
+CUERPO_VIRUS  = <span class="nb">b</span><span class="st">'[LAB-VIRUS-ESAN-2025]'</span>  <span class="cm"># cuerpo simulado (no ejecutable)</span>
+EXTENSIONES   = {<span class="st">'.exe'</span>, <span class="st">'.dll'</span>, <span class="st">'.com'</span>, <span class="st">'.bat'</span>}
+
+<span class="kw">def</span> <span class="fn">ya_infectado</span>(data: bytes) -> bool:
+    <span class="kw">return</span> FIRMA_VIRUS <span class="kw">in</span> data
+
+<span class="kw">def</span> <span class="fn">infectar</span>(ruta: Path) -> bool:
+    <span class="kw">try</span>:
+        data = ruta.read_bytes()
+        <span class="kw">if</span> ya_infectado(data):
+            print(<span class="st">f"  [=] {ruta.name} — ya infectado, skip"</span>)
+            <span class="kw">return</span> <span class="nb">False</span>
+        <span class="cm"># Adjuntar firma + cuerpo (simula append infector)</span>
+        nuevo = data + FIRMA_VIRUS + CUERPO_VIRUS
+        ruta.write_bytes(nuevo)
+        print(<span class="st">f"  [+] {ruta.name} infectado ({len(data)} → {len(nuevo)} bytes)"</span>)
+        <span class="kw">return</span> <span class="nb">True</span>
+    <span class="kw">except</span> <span class="fn">Exception</span> <span class="kw">as</span> e:
+        print(<span class="st">f"  [-] Error en {ruta.name}: {e}"</span>)
+        <span class="kw">return</span> <span class="nb">False</span>
+
+<span class="kw">def</span> <span class="fn">propagar</span>(directorio: str):
+    print(<span class="st">f"\n[VirusSimulado] Escaneando: {directorio}"</span>)
+    print(<span class="st">f"[VirusSimulado] Inicio: {datetime.now().strftime('%H:%M:%S')}\n"</span>)
+    infectados, total = 0, 0
+    <span class="kw">for</span> ruta <span class="kw">in</span> Path(directorio).rglob(<span class="st">'*'</span>):
+        <span class="kw">if</span> ruta.is_file() <span class="kw">and</span> ruta.suffix.lower() <span class="kw">in</span> EXTENSIONES:
+            total += 1
+            <span class="kw">if</span> infectar(ruta):
+                infectados += 1
+    print(<span class="st">f"\n[REPORTE] Total escaneados: {total} | Infectados: {infectados}"</span>)
+    print(<span class="st">"[LAB] Ahora ejecuta analisis_estatico.py contra los archivos"</span>)
+
+<span class="kw">if</span> __name__ == <span class="st">'__main__'</span>:
+    target = sys.argv[1] <span class="kw">if</span> len(sys.argv) > 1 <span class="kw">else</span> <span class="st">'.'</span>
+    propagar(target)</pre>
+      </div>
+    </div>
+  `,
+  lab2: `
+    <div class="card">
+      <div class="card-title">Lab 2: Macro Virus VBA — Análisis y Detección <span class="tag tag-amber">VM Windows + Office</span></div>
+      <div class="info-box tip"><span class="ib-icon">🎯</span><div class="ib-body"><strong>Objetivo:</strong> Observar cómo un macro virus se instala en Normal.dotm y se auto-ejecuta al abrir documentos.</div></div>
+      <div class="lab-steps">
+        <div class="lab-step"><div class="step-num">01</div><div class="step-body"><h4>Habilitar Vista de Macros en Word</h4><p>Ver → Macros → Ver macros. Confirmar que Normal.dotm no tiene macros antes del ejercicio (estado limpio).</p></div></div>
+        <div class="lab-step"><div class="step-num">02</div><div class="step-body"><h4>Abrir el documento de laboratorio</h4><p>Abrir macro_lab.docm (creado por el instructor). Al abrir, el macro AutoOpen se ejecuta automáticamente.</p></div></div>
+        <div class="lab-step"><div class="step-num">03</div><div class="step-body"><h4>Observar en Process Monitor</h4><p>Filtrar por Process Name = WINWORD.EXE. Observar escrituras en AppData\\Roaming\\Microsoft\\Templates\\Normal.dotm</p></div></div>
+        <div class="lab-step"><div class="step-num">04</div><div class="step-body"><h4>Verificar propagación</h4><p>Abrir un documento Word nuevo. Ver → Macros. El macro del virus debe aparecer en Normal.dotm ahora.</p></div></div>
+        <div class="lab-step"><div class="step-num">05</div><div class="step-body"><h4>Desinfección</h4><p>Herramientas → Macros → Seguridad → Alto. Eliminar macros de Normal.dotm manualmente.</p></div></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div><span>macro_virus_lab.vba — código VBA de demostración</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+        <pre><span class="cm">' VirusMacroLab — Demostración educativa ESAN
+' Guarda en Normal.dotm y muestra mensaje de alerta
+' NO tiene payload dañino — solo demuestra propagación</span>
+
+<span class="kw">Sub</span> <span class="fn">AutoOpen</span>()
+    <span class="cm">' Se ejecuta automáticamente al abrir el documento</span>
+    <span class="fn">InstalarEnNormal</span>
+    MsgBox <span class="st">"[LAB ESAN] Macro AutoOpen ejecutado."</span> & vbCrLf & _
+           <span class="st">"Este mensaje aparece porque el macro se copió a Normal.dotm"</span> & vbCrLf & _
+           <span class="st">"En un virus real: aquí iría el payload (envío de emails, descarga, etc.)"</span>, _
+           vbExclamation, <span class="st">"Simulación de Macro Virus"</span>
+<span class="kw">End Sub</span>
+
+<span class="kw">Sub</span> <span class="fn">InstalarEnNormal</span>()
+    <span class="kw">Dim</span> oNormal <span class="kw">As</span> Template
+    <span class="kw">Dim</span> oModule <span class="kw">As</span> Object
+    <span class="kw">Set</span> oNormal = Application.NormalTemplate
+
+    <span class="cm">' Verificar si ya está instalado (marcador de infección)</span>
+    <span class="kw">On Error Resume Next</span>
+    <span class="kw">Set</span> oModule = oNormal.VBProject.VBComponents(<span class="st">"VirusLab"</span>)
+    <span class="kw">If</span> Not oModule <span class="kw">Is</span> Nothing <span class="kw">Then</span>
+        <span class="kw">Exit Sub</span>  <span class="cm">' Ya instalado</span>
+    <span class="kw">End If</span>
+    <span class="kw">On Error GoTo 0</span>
+
+    <span class="cm">' Copiar este módulo a Normal.dotm</span>
+    <span class="kw">Dim</span> sCode <span class="kw">As</span> String
+    sCode = <span class="st">"Sub AutoOpen()" & vbCrLf</span>
+    sCode = sCode & <span class="st">"  MsgBox ""[LAB] Macro virus activo en Normal.dotm""" & vbCrLf</span>
+    sCode = sCode & <span class="st">"End Sub"</span>
+
+    <span class="kw">With</span> oNormal.VBProject.VBComponents.Add(1) <span class="cm">' 1 = vbext_ct_StdModule</span>
+        .Name = <span class="st">"VirusLab"</span>
+        .CodeModule.AddFromString sCode
+    <span class="kw">End With</span>
+    oNormal.Save
+<span class="kw">End Sub</span></pre>
+      </div>
+    </div>
+  `,
+  lab3: `
+    <div class="card">
+      <div class="card-title">Lab 3: Polimorfismo XOR — Simular y Detectar <span class="tag tag-blue">VM Linux/Windows</span></div>
+      <div class="info-box tip"><span class="ib-icon">🎯</span><div class="ib-body"><strong>Objetivo:</strong> Simular cómo el cifrado XOR cambia la firma de un payload, y detectarlo por análisis de entropía.</div></div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div><span>polimorfismo_xor.py — simulación motor polimórfico</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+        <pre><span class="cm">#!/usr/bin/env python3
+# Simulación de polimorfismo por cifrado XOR
+# Lab ESAN — demuestra por qué las firmas fijas no detectan polimórficos</span>
+
+<span class="kw">import</span> os, math, random
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+<span class="cm"># ── PAYLOAD "VIRAL" (simulado, no ejecutable) ─────────────────────────</span>
+PAYLOAD_ORIGINAL = <span class="nb">b</span><span class="st">"""
+[PAYLOAD SIMULADO]
+- Buscar archivos .exe en directorio
+- Adjuntar copia cifrada
+- Verificar trigger (fecha)
+- Ejecutar acción
+"""</span>
+
+<span class="kw">def</span> <span class="fn">xor_cifrar</span>(data: bytes, key: bytes) -> bytes:
+    <span class="cm">"""XOR cíclico — más simple de implementar, frecuente en malware."""</span>
+    <span class="kw">return</span> bytes(b ^ key[i % len(key)] <span class="kw">for</span> i, b <span class="kw">in</span> enumerate(data))
+
+<span class="kw">def</span> <span class="fn">generar_clave_aleatoria</span>(longitud: int = 16) -> bytes:
+    <span class="cm">"""Clave diferente en cada infección → hash diferente → evade firma."""</span>
+    <span class="kw">return</span> bytes(random.randint(1, 254) <span class="kw">for</span> _ <span class="kw">in</span> range(longitud))
+
+<span class="kw">def</span> <span class="fn">calcular_entropia</span>(data: bytes) -> float:
+    <span class="cm">"""Entropía Shannon — texto plano ~4.5, cifrado XOR ~7.5+"""</span>
+    <span class="kw">if not</span> data: <span class="kw">return</span> 0
+    frecuencias = {}
+    <span class="kw">for</span> b <span class="kw">in</span> data:
+        frecuencias[b] = frecuencias.get(b, 0) + 1
+    total = len(data)
+    entropia = -sum((c/total) * math.log2(c/total)
+                    <span class="kw">for</span> c <span class="kw">in</span> frecuencias.values())
+    <span class="kw">return</span> round(entropia, 3)
+
+<span class="kw">def</span> <span class="fn">generar_variante</span>(n: int) -> bytes:
+    <span class="cm">"""Genera N variantes del payload — todas con hash diferente."""</span>
+    clave = generar_clave_aleatoria()
+    payload_cifrado = xor_cifrar(PAYLOAD_ORIGINAL, clave)
+    <span class="cm"># stub del decryptor (simplificado) + clave + payload cifrado</span>
+    stub = <span class="nb">b</span><span class="st">'[DECRYPTOR_STUB_v'</span> + str(n).encode() + <span class="nb">b</span><span class="st">']'</span>
+    variante = stub + clave + payload_cifrado
+    <span class="kw">return</span> variante
+
+print(<span class="st">"=== DEMO POLIMORFISMO XOR ==="</span>)
+print(<span class="st">f"Payload original — Entropía: {calcular_entropia(PAYLOAD_ORIGINAL)}\n"</span>)
+
+<span class="kw">import</span> hashlib
+<span class="kw">for</span> i <span class="kw">in</span> range(1, 6):
+    variante = generar_variante(i)
+    md5  = hashlib.md5(variante).hexdigest()
+    ent  = calcular_entropia(variante)
+    detectable = <span class="st">"🔴 DETECTABLE"</span> <span class="kw">if</span> ent < 5.5 <span class="kw">else</span> <span class="st">"⚠️  SOSPECHOSO"</span>
+    print(<span class="st">f"Variante {i}: MD5={md5[:16]}... Entropía={ent} {detectable}"</span>)
+
+print(<span class="st">f"\n→ 5 variantes = 5 hashes MD5 completamente distintos"</span>)
+print(<span class="st">f"→ Un AV de firmas no detectará variantes 2-5 si solo tiene la firma de la 1"</span>)
+print(<span class="st">f"→ Detección correcta: análisis de entropía > 6.5 = sospechoso de cifrado"</span>)</pre>
+      </div>
+    </div>
+  `,
+  lab4: `
+    <div class="card">
+      <div class="card-title">Lab 4: Simulación de Gusano de Red <span class="tag tag-red">VM Kali + Windows</span></div>
+      <div class="info-box danger"><span class="ib-icon">🔴</span><div class="ib-body"><strong>CRÍTICO:</strong> Este lab requiere red completamente aislada. El gusano escanea activamente IPs. Nunca conectar la VM a una red real.</div></div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><span class="d-r"></span><span class="d-y"></span><span class="d-g"></span></div><span>gusano_lab.py — simulación propagación de red</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+        <pre><span class="cm">#!/usr/bin/env python3
+# GusanoLab — Simulación de propagación en red
+# SOLO para red host-only 192.168.56.0/24
+# Payload: abre un socket y responde a conexiones (no hace daño)</span>
+
+<span class="kw">import</span> socket, threading, ipaddress, time, sys, os
+<span class="kw">from</span> concurrent.futures <span class="kw">import</span> ThreadPoolExecutor
+
+RED_OBJETIVO = <span class="st">"192.168.56.0/24"</span>   <span class="cm"># CAMBIAR a la red de lab</span>
+PUERTO_C2    = 9090                  <span class="cm"># Puerto de "C2" simulado</span>
+BANNER       = <span class="st">b"[GUSANO-LAB-ESAN] infectado"</span>
+
+<span class="kw">def</span> <span class="fn">es_activo</span>(ip: str, timeout=0.5) -> bool:
+    <span class="cm">"""Ping rápido via socket — verifica si el host está vivo."""</span>
+    <span class="kw">try</span>:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(timeout)
+        result = s.connect_ex((ip, PUERTO_C2))
+        s.close()
+        <span class="kw">return</span> result == 0
+    <span class="kw">except</span>:
+        <span class="kw">return</span> <span class="nb">False</span>
+
+<span class="kw">def</span> <span class="fn">escanear_red</span>(red: str) -> list:
+    <span class="cm">"""Fase de reconocimiento: busca hosts con el puerto C2 abierto."""</span>
+    print(<span class="st">f"[*] Escaneando red {red}..."</span>)
+    victimas = []
+    network = ipaddress.ip_network(red, strict=<span class="nb">False</span>)
+    <span class="kw">with</span> ThreadPoolExecutor(max_workers=50) <span class="kw">as</span> pool:
+        resultados = list(pool.map(<span class="kw">lambda</span> ip: (str(ip), es_activo(str(ip))),
+                                    network.hosts()))
+    victimas = [ip <span class="kw">for</span> ip, activo <span class="kw">in</span> resultados <span class="kw">if</span> activo]
+    print(<span class="st">f"[+] Hosts con puerto {PUERTO_C2} abierto: {victimas}"</span>)
+    <span class="kw">return</span> victimas
+
+<span class="kw">def</span> <span class="fn">servidor_gusano</span>():
+    <span class="cm">"""El gusano instala un servidor en la víctima — punto de detección."""</span>
+    srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    srv.bind((<span class="st">''</span>, PUERTO_C2))
+    srv.listen(5)
+    print(<span class="st">f"[LAB] Servidor gusano activo en puerto {PUERTO_C2}"</span>)
+    <span class="kw">while</span> <span class="nb">True</span>:
+        conn, addr = srv.accept()
+        print(<span class="st">f"[LAB] Conexión desde {addr[0]}"</span>)
+        conn.send(BANNER + <span class="nb">b</span><span class="st">'\n'</span>)
+        conn.close()
+
+<span class="cm"># Iniciar servidor en background (simula instalación en víctima)</span>
+t = threading.Thread(target=servidor_gusano, daemon=<span class="nb">True</span>)
+t.start()
+
+time.sleep(1)
+victimas = escanear_red(RED_OBJETIVO)
+
+print(<span class="st">f"\n[REPORTE DETECCIÓN]"</span>)
+print(<span class="st">f"IOC: Proceso Python escuchando en puerto no estándar {PUERTO_C2}"</span>)
+print(<span class="st">f"IOC: Escaneo SYN masivo a {RED_OBJETIVO} en corto tiempo"</span>)
+print(<span class="st">f"IOC: Múltiples conexiones salientes a hosts distintos"</span>)
+print(<span class="st">f"\nDetección con Wireshark: tcp.flags.syn==1 and tcp.port=={PUERTO_C2}"</span>)
+print(<span class="st">"Presiona Ctrl+C para terminar."</span>)
+<span class="kw">try</span>:
+    <span class="kw">while</span> <span class="nb">True</span>: time.sleep(1)
+<span class="kw">except</span> KeyboardInterrupt:
+    print(<span class="st">"[*] Lab terminado."</span>)</pre>
+      </div>
+    </div>
+  `
+};
+
+function showLab(lab) {
+  document.querySelectorAll('#lab-selector .nav-tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('lab-content').innerHTML = labContent[lab];
+}
+
+// Load default lab
+document.getElementById('lab-content').innerHTML = labContent['lab1'];
+</script>
+
+</body>
+</html>
+
+</body></html>
